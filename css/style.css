@@ -1,0 +1,210 @@
+/* Custom Styles for FinBot */
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overscroll-behavior-y: contain;
+}
+
+/* Hide scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* View Transitions */
+.view-transition {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Safe area for mobile bottom bar */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0.75rem);
+}
+
+/* Calendar cell styles */
+.calendar-day {
+  transition: all 0.15s ease;
+}
+
+.calendar-day:active {
+  transform: scale(0.95);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Mobile tap highlight removal */
+button, .calendar-day, [onclick] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Loading dots animation */
+.animate-bounce {
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* ===========================
+   LOADING SCREEN
+=========================== */
+
+#loading-screen{
+
+position:fixed;
+inset:0;
+background:#020617;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999999;
+
+transition:.8s;
+
+}
+
+.loading-content{
+
+text-align:center;
+
+}
+
+.logo h1{
+
+font-size:55px;
+font-weight:800;
+
+}
+
+.white{
+
+color:white;
+
+}
+
+.green{
+
+color:#10b981;
+
+}
+
+.logo p{
+
+margin-top:10px;
+color:#94a3b8;
+font-size:14px;
+
+}
+
+.robot{
+
+font-size:100px;
+margin:35px 0;
+animation:float 2s infinite;
+
+}
+
+@keyframes float{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-15px);
+
+}
+
+}
+
+#loading-text{
+
+margin-bottom:18px;
+color:#cbd5e1;
+
+}
+
+.loading-bar{
+
+width:320px;
+height:10px;
+background:#1e293b;
+border-radius:999px;
+overflow:hidden;
+
+}
+
+#loading-fill{
+
+width:0%;
+height:100%;
+background:linear-gradient(90deg,#10b981,#34d399);
+
+transition:.25s;
+
+}
+
+#loading-percent{
+
+display:block;
+margin-top:12px;
+font-weight:bold;
+color:#10b981;
+
+}
+
+.loading-hide{
+
+opacity:0;
+visibility:hidden;
+
+}
+
+@supports (padding: max(0px)) {
+
+.safe-bottom{
+
+padding-bottom:max(12px, env(safe-area-inset-bottom));
+
+}
+
+}

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FinBot - Smart AI Finance Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 h-[100dvh] w-full flex flex-col overflow-hidden select-none">
+
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="logo">
+                <h1>
+                    <span class="white">Fin</span><span class="green">Bot</span>
+                </h1>
+                <p>Your Friendly Finance Buddy</p>
+            </div>
+            <div class="robot">
+                🤖
+            </div>
+            <p id="loading-text">
+                Menyiapkan Dashboard...
+            </p>
+            <div class="loading-bar">
+                <div id="loading-fill"></div>
+            </div>
+            <span id="loading-percent">0%</span>
+        </div>
+    </div>
+
+
+  <header class="border-b border-slate-900 bg-slate-900/40 backdrop-blur-md px-4 md:px-6 py-3 md:py-4 flex items-center justify-between z-40 shrink-0">
+    <div class="flex items-center gap-2.5">
+      <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20 shadow-lg shadow-emerald-500/5 shrink-0">
+        <i data-lucide="wallet" class="w-5 h-5 md:w-6 md:h-6"></i>
+      </div>
+      <div>
+        <h1 class="font-extrabold text-sm md:text-lg tracking-tight flex items-center gap-1.5">
+          FinBot <span class="text-[9px] font-bold bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded-full border border-emerald-500/20 shrink-0">AI Engine</span>
+        </h1>
+        <p class="text-[9px] md:text-xs text-slate-400 hidden sm:block">Asisten Keuangan Pintar & Integrasi Google Sheets</p>
+      </div>
+    </div>
+    
+    <div class="hidden md:flex bg-slate-950 border border-slate-800 p-1 rounded-xl items-center shadow-inner">
+      <button id="dt-tab-chat" onclick="window.switchView('chat')" class="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-200 bg-emerald-500 text-slate-950 shadow-md">
+        <i data-lucide="message-square" class="w-4 h-4"></i>
+        <span>Asisten AI</span>
+      </button>
+      <button id="dt-tab-report" onclick="window.switchView('report')" class="flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-200 text-slate-400 hover:text-slate-200">
+        <i data-lucide="line-chart" class="w-4 h-4"></i>
+        <span>Laporan & Kalender</span>
+      </button>
+    </div>
+    
+    <div class="flex items-center gap-2 md:gap-3 shrink-0">
+      <button onclick="window.toggleModal('setup-modal')" class="p-2 md:px-3.5 md:py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 rounded-xl transition border border-slate-800 flex items-center gap-2 text-xs" title="Setup Integrasi">
+        <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
+        <span class="hidden md:inline font-semibold">Setup Sheets</span>
+      </button>
+      <div class="h-6 w-[1px] bg-slate-800 hidden md:block"></div>
+      <div class="flex items-center gap-1.5 text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-1.5 rounded-lg border border-emerald-500/20 shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-medium text-[9px] uppercase tracking-wider hidden sm:inline">Online</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col min-h-0 relative w-full pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">
+
+    <section id="view-chat" class="view-transition flex-1 flex flex-col bg-slate-950 min-h-0 w-full">
+      <div class="px-4 py-2 bg-slate-900/10 border-b border-slate-900 flex items-center justify-between shrink-0">
+        <span class="text-[9px] font-bold uppercase tracking-widest text-slate-500 flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-3 h-3 text-emerald-400"></i> Konsol AI Aktif
+        </span>
+        <button onclick="window.clearChat()" class="text-[10px] text-slate-500 hover:text-rose-400 transition flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3 h-3"></i> Bersihkan Riwayat
+        </button>
+      </div>
+
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+        </div>
+
+      <div class="px-4 py-2 bg-slate-950 flex flex-nowrap gap-1.5 shrink-0 border-t border-slate-900/60 overflow-x-auto no-scrollbar scroll-smooth">
+        <button onclick="window.quickInput('Makan siang di warteg 25 ribu')" class="text-[10px] bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800/80 px-3 py-1.5 rounded-full transition shrink-0 whitespace-nowrap">
+          🍛 Makan Warteg 25k
+        </button>
+        <button onclick="window.quickInput('Terima transferan proyek sampingan 1.500.000')" class="text-[10px] bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800/80 px-3 py-1.5 rounded-full transition shrink-0 whitespace-nowrap">
+          💰 Freelance Proyek 1.5M
+        </button>
+        <button onclick="window.quickInput('Isi token listrik rumah 200rb')" class="text-[10px] bg-slate-900/60 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800/80 px-3 py-1.5 rounded-full transition shrink-0 whitespace-nowrap">
+          ⚡ Token Listrik 200k
+        </button>
+      </div>
+
+      <div class="p-3 md:p-4 bg-slate-900/30 border-t border-slate-900/80 shrink-0">
+        <form id="chat-form" class="max-w-4xl mx-auto relative flex items-center bg-slate-900 border border-slate-800 focus-within:border-emerald-500/50 rounded-2xl p-1 md:p-1.5 transition-all">
+          <input 
+            type="text" 
+            id="user-input" 
+            placeholder="Tulis transaksi kamu disini..." 
+            class="w-full bg-transparent px-3 md:px-4 py-2.5 md:py-3 text-sm focus:outline-none placeholder-slate-500 text-slate-100"
+            autocomplete="off"
+            required
+          >
+          <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 p-2.5 md:p-3 rounded-xl font-bold transition flex items-center justify-center shadow-lg shadow-emerald-500/10 active:scale-95 shrink-0">
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <section id="view-report" class="view-transition flex-1 flex flex-col bg-slate-950 min-h-0 w-full hidden overflow-y-auto">
+      <div class="p-4 md:p-6 border-b border-slate-900 bg-slate-900/20 flex flex-col gap-4 shrink-0">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="font-bold text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wider">
+              <span class="w-2 h-2 bg-emerald-500 rounded-full shrink-0"></span>
+              Laporan & Sheets
+            </h2>
+            <p class="text-[10px] md:text-xs text-slate-400 mt-0.5">Pantau ringkasan keuangan kamu.</p>
+          </div>
+          <button onclick="window.triggerResetConfirmation()" class="text-[10px] font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1.5 shrink-0">
+            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> <span class="hidden sm:inline">Reset Data</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-slate-900/40 border border-slate-800/80 p-3.5 rounded-xl">
+            <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg inline-block">
+              <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
+            </div>
+            <div class="mt-2 truncate">
+              <span class="text-[9px] text-slate-400 uppercase tracking-wider block font-semibold">Pemasukan</span>
+              <span id="total-income" class="font-bold text-emerald-400 text-xs md:text-sm block truncate">Rp 0</span>
+            </div>
+          </div>
+          <div class="bg-slate-900/40 border border-slate-800/80 p-3.5 rounded-xl">
+            <div class="p-2 bg-rose-500/10 text-rose-400 rounded-lg inline-block">
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </div>
+            <div class="mt-2 truncate">
+              <span class="text-[9px] text-slate-400 uppercase tracking-wider block font-semibold">Pengeluaran</span>
+              <span id="total-expense" class="font-bold text-rose-400 text-xs md:text-sm block truncate">Rp 0</span>
+            </div>
+          </div>
+          <div class="bg-slate-900/40 border border-slate-800/80 p-3.5 rounded-xl">
+            <div class="p-2 bg-blue-500/10 text-blue-400 rounded-lg inline-block">
+              <i data-lucide="wallet" class="w-4 h-4"></i>
+            </div>
+            <div class="mt-2 truncate">
+              <span class="text-[9px] text-slate-400 uppercase tracking-wider block font-semibold">Saldo</span>
+              <span id="total-balance" class="font-bold text-blue-400 text-xs md:text-sm block truncate">Rp 0</span>
+            </div>
+          </div>
+          <div class="bg-slate-900/40 border border-slate-800/80 p-3.5 rounded-xl">
+            <div class="p-2 bg-purple-500/10 text-purple-400 rounded-lg inline-block">
+              <i data-lucide="database" class="w-4 h-4"></i>
+            </div>
+            <div class="mt-2 truncate">
+              <span class="text-[9px] text-slate-400 uppercase tracking-wider block font-semibold">Transaksi</span>
+              <span id="total-transactions" class="font-bold text-purple-400 text-xs md:text-sm block">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="bg-slate-900/30 border border-slate-900 p-4 rounded-xl">
+          <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2 flex-wrap gap-2">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i>
+              <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Kalender Keuangan</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="window.changeMonth(-1)" class="p-1.5 hover:bg-slate-800 rounded text-slate-400 hover:text-white transition">
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+              </button>
+              <span id="calendar-month-year" class="text-xs font-bold text-slate-300 min-w-[90px] text-center">Juni 2026</span>
+              <button onclick="window.changeMonth(1)" class="p-1.5 hover:bg-slate-800 rounded text-slate-400 hover:text-white transition">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-500 mb-1">
+            <span>MIN</span><span>SEN</span><span>SEL</span><span>RAB</span><span>KAM</span><span>JUM</span><span>SAB</span>
+          </div>
+          <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
+          <div id="calendar-filter-indicator" class="hidden mt-3 p-2 bg-emerald-500/5 border border-emerald-500/20 rounded-lg flex items-center justify-between text-[11px] text-emerald-400">
+            <span id="filter-date-text">Transaksi: DD-MM-YYYY</span>
+            <button onclick="window.clearDateFilter()" class="font-extrabold hover:underline flex items-center gap-1 text-rose-400">
+              <i data-lucide="x" class="w-3 h-3"></i> Bersihkan
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/30 border border-slate-900 p-4 rounded-xl flex flex-col h-full">
+          <div class="flex items-center gap-1.5 mb-3 border-b border-slate-800 pb-2 shrink-0">
+            <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
+            <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Laporan Bulanan</h3>
+          </div>
+          <div id="monthly-summary-list" class="space-y-2 flex-1 overflow-y-auto pr-1"></div>
+        </div>
+      </div>
+
+      <div class="px-4 md:px-6 pb-4">
+        <div class="bg-slate-900/30 border border-slate-900 rounded-xl p-4">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <i data-lucide="pie-chart" class="w-4 h-4 text-emerald-400"></i> Distribusi Kategori
+          </h3>
+          <div id="category-bars" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <div class="px-4 md:px-6 pb-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden flex flex-col">
+          <div class="bg-slate-900/80 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between text-[10px] text-slate-400">
+            <div class="flex items-center gap-2 font-mono">
+              <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-sm"></span>
+              <span>Google Sheet: <span class="font-bold text-white">"FinBot_Transactions"</span></span>
+            </div>
+          </div>
+          
+          <div class="w-full overflow-x-auto">
+  <table class="w-full text-left border-collapse text-[11px] md:text-xs font-mono">
+    <thead>
+      <tr class="bg-slate-950/85 border-b border-slate-800 text-slate-400">
+        <th class="py-3 px-3">Tanggal</th>
+        <th class="py-3 px-3">Deskripsi</th>
+        <th class="py-3 px-3 text-right">Nominal</th>
+        <th class="py-3 px-3 hidden md:table-cell">Kategori</th>
+        <th class="py-3 px-3 hidden md:table-cell">Tipe</th>
+        <th class="py-3 px-3 text-center">Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="sheets-table-body" class="divide-y divide-slate-800/50">
+      </tbody>
+  </table>
+</div>
+
+          <div id="no-data-state" class="hidden flex flex-col items-center justify-center py-12 text-slate-500 space-y-2">
+            <i data-lucide="file-spreadsheet" class="w-10 h-10 text-slate-700"></i>
+            <p class="text-xs font-semibold text-slate-400">Belum Ada Transaksi</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] px-6 flex items-center justify-around z-50 shadow-2xl">
+    <button id="mobile-tab-chat" onclick="window.switchView('chat')" class="flex flex-col items-center gap-1 transition-all duration-200 text-emerald-400">
+      <i data-lucide="message-square" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold tracking-wider uppercase">Asisten</span>
+    </button>
+    <button id="mobile-tab-report" onclick="window.switchView('report')" class="flex flex-col items-center gap-1 transition-all duration-200 text-slate-500">
+      <i data-lucide="line-chart" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold tracking-wider uppercase">Laporan</span>
+    </button>
+  </nav>
+
+  <div id="setup-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center z-[60] p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 md:p-5 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20 hidden sm:block">
+            <i data-lucide="terminal" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm md:text-base text-slate-100">Setup Google Sheets</h3>
+            <p class="text-[10px] md:text-xs text-slate-400 mt-0.5">Panduan integrasi instan</p>
+          </div>
+        </div>
+        <button onclick="window.toggleModal('setup-modal')" class="text-slate-400 hover:text-white p-1 rounded-lg transition bg-slate-800/50 hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-4 md:p-5 overflow-y-auto space-y-5 text-xs md:text-sm text-slate-300">
+        <div>
+          <span class="text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">LANGKAH 1</span>
+          <h4 class="font-semibold text-slate-200 mt-1">Buat Google Spreadsheet</h4>
+          <p class="text-[11px] text-slate-400 mt-0.5">Buat lembar kerja baru dengan 5 kolom:</p>
+          <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 mt-1.5 font-mono text-[9px] text-center flex flex-wrap sm:grid sm:grid-cols-5 gap-1">
+            <span class="bg-slate-900 py-1 px-2 flex-1 rounded text-slate-300 border border-slate-800">Tanggal</span>
+            <span class="bg-slate-900 py-1 px-2 flex-1 rounded text-slate-300 border border-slate-800">Deskripsi</span>
+            <span class="bg-slate-900 py-1 px-2 flex-1 rounded text-slate-300 border border-slate-800">Nominal</span>
+            <span class="bg-slate-900 py-1 px-2 flex-1 rounded text-slate-300 border border-slate-800">Kategori</span>
+            <span class="bg-slate-900 py-1 px-2 flex-1 rounded text-slate-300 border border-slate-800">Tipe</span>
+          </div>
+        </div>
+        <div>
+          <span class="text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">LANGKAH 2</span>
+          <h4 class="font-semibold text-slate-200 mt-1">Pasang Apps Script</h4>
+          <p class="text-[11px] text-slate-400 mt-0.5">Ekstensi > Apps Script, tempel kode:</p>
+          <div class="relative mt-2">
+            <pre id="script-code-block" class="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-[10px] text-emerald-400 overflow-x-auto max-h-[150px] no-scrollbar">
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    sheet.appendRow([
+      new Date(data.date),
+      data.description,
+      parseFloat(data.amount),
+      data.category,
+      data.type
+    ]);
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "success"
+    })).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "error"
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+            <button onclick="window.copyToClipboard()" class="absolute top-2 right-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 p-1.5 rounded-lg text-slate-400 hover:text-white transition">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          <span class="text-[9px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">LANGKAH 3</span>
+          <h4 class="font-semibold text-slate-200 mt-1">Deploy Web App</h4>
+          <p class="text-[11px] text-slate-400 mt-0.5">Deploy sebagai Web App, akses Anyone. Tempel URL:</p>
+          <div class="mt-3 flex flex-col sm:flex-row gap-2">
+            <input type="url" id="webhook-url-input" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-mono text-emerald-400 focus:outline-none focus:border-emerald-500">
+            <button onclick="window.saveWebhookUrl()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2.5 rounded-xl font-bold text-xs transition shrink-0 w-full sm:w-auto">
+              Simpan
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex justify-end shrink-0">
+        <button onclick="window.toggleModal('setup-modal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl font-bold text-xs transition">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirm-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-[70] p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm p-5 shadow-2xl">
+      <div class="flex items-center gap-3 text-rose-400 mb-3">
+        <div class="p-2 bg-rose-500/10 rounded-xl border border-rose-500/20">
+          <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+        </div>
+        <h3 id="confirm-title" class="font-bold text-sm text-slate-100">Konfirmasi</h3>
+      </div>
+      <p id="confirm-message" class="text-xs text-slate-400 leading-relaxed mb-5">Apakah Anda yakin?</p>
+      <div class="flex justify-end gap-2.5">
+        <button onclick="window.closeConfirmModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg font-bold text-xs transition">
+          Batal
+        </button>
+        <button id="confirm-action-btn" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg font-bold text-xs transition">
+          Ya
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/webhook.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
